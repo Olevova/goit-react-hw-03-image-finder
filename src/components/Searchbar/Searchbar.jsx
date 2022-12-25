@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { ImRocket } from 'react-icons/im';
 import style from "./Searchbar.module.scss"
-
+import PropTypes from "prop-types";
 
 
 
@@ -45,4 +45,9 @@ export class Searchbar extends Component{
                 </form>
             </header>)
     }
+}
+
+Searchbar.propTypes ={
+    picture: PropTypes.string.isRequired,
+    
 }

@@ -1,5 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import PropTypes from "prop-types";
+
 
 
 export const ButtonLoad = ({onClickSearch}) => {
@@ -10,3 +12,7 @@ export const ButtonLoad = ({onClickSearch}) => {
         </div>
 
 } 
+
+ButtonLoad.propTypes ={
+    onClickSearch: PropTypes.func.isRequired
+}

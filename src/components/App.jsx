@@ -44,10 +44,12 @@ export class App extends Component {
   
 async componentDidUpdate(prevProps, prevState) {
 
-  if (prevState.search !== this.state.search || prevState.page !== this.state.page) {
+  const {page, search} = this.state
+
+  if (prevState.search !== search || prevState.page !== page) {
     console.log(prevState.page, this.state.page);
-    const respons = await pictureResp(this.state.search, this.state.page)
-    this.setState()
+    this.setState({isdownload:true})
+    const respons = await pictureResp(search, page)
     if (respons.data.hits.length < 1) {
       MySwal.fire({
         title: "Nothing found on this request",
@@ -55,7 +57,7 @@ async componentDidUpdate(prevProps, prevState) {
       })
     }
 
-    if (prevState.search !== this.state.search) {
+    if (prevState.search !== search) {
       console.log("one");
       this.setState({
         isload: true,
@@ -68,20 +70,18 @@ async componentDidUpdate(prevProps, prevState) {
     console.log(respons.data);
     this.setState((prev) => ({
       gallery: [...prev.gallery, ...respons.data.hits],
-      totalHitsLeft: prev.totalHitsLeft-12
+      totalHitsLeft: prev.totalHitsLeft-12,
+      isdownload:null
           })
       )
   }
   }
 
 onLargePicture=(e)=> {
-  console.log("hit");
-  // console.log(e);
   this.setState({bigImage : e})
   }
 
 onModalClick = (e) => {
-  console.log(e.currentTarget, e.code);
   this.setState((prev)=>({bigImage : !prev.bigImage}))
   }
   
@@ -91,15 +91,17 @@ onClickLoad = () => {
   }
 
 render(){
+
+  const {gallery, page, isload, isdownload, totalHitsLeft,bigImage} = this.state
   return <div>
       
     <Searchbar onSubmit={this.onHandler} />
-    {this.state.bigImage &&
-    <Modal bigImage={this.state.bigImage} onModalClick={this.onModalClick } />
+    {bigImage &&
+    <Modal bigImage={bigImage} onModalClick={this.onModalClick } />
     } 
-    {this.state.isdownload && <Spiner/>}
-    {this.state.isload && <ImageGallery onRender={this.state.gallery} onLargePicture={this.onLargePicture} />}
-    {this.state.page > 0 && this.state.totalHitsLeft>12 &&<ButtonLoad onClickSearch={this.onClickLoad} />}
+    {isload && <ImageGallery onRender={gallery} onLargePicture={this.onLargePicture} />}
+    {isdownload && <Spiner/>}
+    {page > 0 && totalHitsLeft>12 &&<ButtonLoad onClickSearch={this.onClickLoad} />}
      </div>
   };
 };

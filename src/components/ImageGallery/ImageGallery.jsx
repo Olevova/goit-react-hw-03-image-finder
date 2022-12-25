@@ -1,6 +1,7 @@
 import { ImageGalleryItem } from "../ImageGalleryItem/ImageGalleryItem"
 import * as React from 'react';
 import ImageList from '@mui/material/ImageList';
+import PropTypes from "prop-types";
 
 
 
@@ -15,3 +16,7 @@ export const ImageGallery = ({ onRender,onLargePicture}) => {
   </ImageList>
     }
  
+ImageGallery.propTypes = {
+  onRender: PropTypes.array.isRequired,
+  onLargePicture: PropTypes.func.isRequired
+}
