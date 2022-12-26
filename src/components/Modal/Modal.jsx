@@ -25,7 +25,7 @@ export class Modal extends Component{
 
     onModalClick = (e) => {
         console.log("modal");
-        this.props.onModalClick(e)
+        this.props.onModalClick(e);
     }
 
     render()

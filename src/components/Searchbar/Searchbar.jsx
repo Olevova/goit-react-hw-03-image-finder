@@ -48,6 +48,6 @@ export class Searchbar extends Component{
 }
 
 Searchbar.propTypes ={
-    picture: PropTypes.string.isRequired,
+    picture: PropTypes.string,
     
 }

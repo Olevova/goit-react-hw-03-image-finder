@@ -22,8 +22,9 @@ export class App extends Component {
 }
 
   onHandler = (props) => {
+    const {search} = this.state;
     console.log(props);
-    if (this.state.search === props) {
+    if (search === props) {
       MySwal.fire({
         title: "try new word",
         icon: "warning"
@@ -33,7 +34,7 @@ export class App extends Component {
   
     this.setState({
       gallery:null,
-      page: 1,
+      page: 0,
       isload: null,
       bigImage: false,
       search: props,
@@ -47,10 +48,11 @@ async componentDidUpdate(prevProps, prevState) {
   const {page, search} = this.state
 
   if (prevState.search !== search || prevState.page !== page) {
-    console.log(prevState.page, this.state.page);
-    this.setState({isdownload:true})
-    const respons = await pictureResp(search, page)
-    if (respons.data.hits.length < 1) {
+    console.log(prevState.page, page);
+    this.setState({isdownload:true});
+    const respons = await pictureResp(search, page);
+    const {data:{totalHits,hits}} = respons;
+    if (hits.length < 1) {
       MySwal.fire({
         title: "Nothing found on this request",
         icon: "warning"
@@ -58,18 +60,17 @@ async componentDidUpdate(prevProps, prevState) {
     }
 
     if (prevState.search !== search) {
-      console.log("one");
       this.setState({
         isload: true,
         isdownload: null,
-        gallery: respons.data.hits,
-        totalHitsLeft: respons.data.totalHits-12
+        gallery: hits,
+        totalHitsLeft: totalHits-12
       })
       return
     }
     console.log(respons.data);
     this.setState((prev) => ({
-      gallery: [...prev.gallery, ...respons.data.hits],
+      gallery: [...prev.gallery, ...hits],
       totalHitsLeft: prev.totalHitsLeft-12,
       isdownload:null
           })
@@ -101,7 +102,7 @@ render(){
     } 
     {isload && <ImageGallery onRender={gallery} onLargePicture={this.onLargePicture} />}
     {isdownload && <Spiner/>}
-    {page > 0 && totalHitsLeft>12 &&<ButtonLoad onClickSearch={this.onClickLoad} />}
+    {page >= 0 && totalHitsLeft>0 &&<ButtonLoad onClickSearch={this.onClickLoad} />}
      </div>
   };
 };
